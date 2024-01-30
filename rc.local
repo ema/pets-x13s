@@ -1,0 +1,7 @@
+#!/bin/sh
+# pets: destfile=/etc/rc.local, owner=root, group=root, mode=0755
+
+/home/ema/bin/update-i3status > /home/ema/.i3status.conf
+chown ema: /home/ema/.i3status.conf
+
+exit 0

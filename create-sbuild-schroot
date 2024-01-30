@@ -1,0 +1,40 @@
+#!/bin/bash
+# pets: package=sbuild
+# pets: package=mmdebstrap
+# pets: package=apt-cacher-ng
+# pets: destfile=/home/ema/bin/create-sbuild-schroot, owner=ema, group=ema, mode=0755
+
+if [ "$EUID" -eq 0 ]; then
+    echo "Do not run this as root"
+    exit 1
+fi
+
+BASEDIR=$HOME/chroots
+
+mkdir -p ${BASEDIR}/snapshots
+
+DIST="${1:-unstable}"
+ARCH="${2:-armhf}"
+
+DEST="${BASEDIR}/${DIST}-${ARCH}-sbuild"
+CONFFILE=/etc/schroot/chroot.d/${DIST}-${ARCH}-sbuild
+
+if test -f $CONFFILE; then
+    echo "$CONFFILE exists already, exiting"
+    exit 1
+fi
+
+sudo /usr/bin/btrfs subvolume create $DEST
+sudo mmdebstrap --variant=buildd --arch=$ARCH $DIST $DEST http://localhost:3142/debian
+
+cat << EOF | sudo tee $CONFFILE
+[${DIST}-${ARCH}-sbuild]
+description=Debian ${DIST}/${ARCH} autobuilder
+groups=root,sbuild
+root-groups=root,sbuild
+profile=sbuild
+type=btrfs-snapshot
+btrfs-source-subvolume=${DEST}
+btrfs-snapshot-directory=${BASEDIR}/snapshots
+#aliases=unstable-arm64-sbuild
+EOF

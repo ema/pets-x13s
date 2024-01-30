@@ -1,0 +1,9 @@
+# pets: destfile=/etc/default/consolation, owner=root, group=root, mode=0644
+# pets: package=consolation
+# pets: post=systemctl restart consolation
+
+# This is a POSIX shell fragment
+# Options for consolation, see 'man consolation' for options.
+# No options is fine for most users.
+
+DAEMON_OPTS="--set-tap-map=lmr --enable-tap"

@@ -1,0 +1,12 @@
+# pets: destfile=/home/ema/.sbuildrc, owner=ema, group=ema
+# pets: package=sbuild
+
+$maintainer_name='Emanuele Rocca <ema@debian.org>';
+$run_lintian = 0;
+$clean_source = 0;
+$autopkgtest_opts = ['--apt-upgrade', '--', 'schroot', '%r-%a-sbuild']; 
+#$purge_build_directory = 'never';
+#$purge_session = 'successful';
+
+# don't remove this, Perl needs it:
+1;

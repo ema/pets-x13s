@@ -1,0 +1,49 @@
+#!/bin/sh
+# pets: destfile=/home/ema/bin/update-i3status, owner=ema, group=ema, mode=0755
+# pets: package=i3status
+
+cat << EOF
+general {
+        colors = true
+        interval = 5
+}
+
+order += "wireless _first_"
+order += "battery 0"
+order += "tztime local"
+
+EOF
+
+for i in `seq 0 7`; do
+    echo "order += \"cpu_temperature $i\""
+done
+
+cat << EOF
+
+wireless _first_ {
+        format_up = "W: (%quality at %essid) %ip"
+        format_down = "W: down"
+}
+
+battery 0 {
+        format = "%status %percentage %remaining"
+        format_down = "No battery"
+        status_chr = "⚡ CHR"
+        status_bat = "🔋 BAT"
+        status_unk = "? UNK"
+        status_full = "☻ FULL"
+        path = "/sys/class/power_supply/qcom-battmgr-bat/uevent"
+        low_threshold = 10
+}
+EOF
+
+num=0
+for f in /sys/devices/virtual/thermal/thermal_zone*/hwmon*/name ; do
+        if grep -q ^cpu $f; then
+		printf "\ncpu_temperature $num {\n"
+		echo '   format = "%degrees °C"'
+		echo "   path = \"`dirname $f`/temp1_input\""
+		echo '}'
+                num=$((num+1))
+        fi
+done

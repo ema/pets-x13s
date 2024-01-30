@@ -1,0 +1,4 @@
+# pets: destfile=/etc/htoprc, owner=root, group=root, mode=0644
+# pets: package=htop
+
+hide_kernel_threads=1

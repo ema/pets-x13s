@@ -1,0 +1,4 @@
+# pets: package=quilt
+# pets: destfile=/home/ema/.quiltrc, owner=ema, group=ema, mode=0644
+
+QUILT_PATCHES=debian/patches

@@ -1,0 +1,14 @@
+# pets: destfile=/usr/local/lib/systemd/system/rclocal.service, owner=root, group=root, mode=0644 
+# pets: post=/usr/bin/systemctl daemon-reload
+
+[Unit]
+Description=Start /etc/rc.local like in the good old days
+After=multi-user.target
+ConditionPathExists=/etc/rc.local
+
+[Service]
+Type=simple
+ExecStart=/etc/rc.local
+
+[Install]
+WantedBy=multi-user.target
