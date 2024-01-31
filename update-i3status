@@ -10,7 +10,7 @@ general {
 
 order += "wireless _first_"
 order += "battery 0"
-order += "tztime local"
+order += "read_file tstate"
 
 EOF
 
@@ -46,4 +46,13 @@ for f in /sys/devices/virtual/thermal/thermal_zone*/hwmon*/name ; do
 		echo '}'
                 num=$((num+1))
         fi
+done
+
+for d in /sys/class/thermal/cooling_device*/type; do
+	if grep -q cpufreq-cpu4 $d; then
+		printf "\nread_file tstate {\n"
+		echo "    path = \"`dirname $d`/cur_state\""
+		echo "    format = \"%title: %content\""
+		echo "}"
+	fi
 done
