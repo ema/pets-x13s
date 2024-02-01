@@ -1,0 +1,13 @@
+#!/bin/bash
+# pets: destfile=/home/ema/bin/power-and-temperature, owner=ema, group=ema, mode=0755
+
+for f in /sys/devices/virtual/thermal/thermal_zone*/hwmon*/name ; do
+    if ! grep -q ^cpu $f; then
+        continue
+    fi
+
+    val="$(cat `dirname $f`/temp1_input)"
+    printf "$val "
+done
+
+awk '{print $1*10^-6 " W"}' /sys/class/power_supply/qcom-battmgr-bat/power_now
